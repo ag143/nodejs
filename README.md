@@ -1,5 +1,9 @@
 # nodejs
 
+# references
+
+- https://nodejs.dev/learn/introduction-to-nodejs
+
 - Introduction to Node.js
 - A brief history of Node.js
 - How to install Node.js
