@@ -1,0 +1,355 @@
+
+<!doctype html>
+<html>
+<head>
+<style>
+.h1 {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.h2 {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.h3 {
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+.h4 {
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: grey; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000; 
+</style>
+<script src="jquery-3.4.1.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js'></script>
+		<script src="src/navigation.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="styles/navigation1.css">
+		<link rel="stylesheet" type="text/css" href="styles/navigation2.css">
+		<link rel="stylesheet" type="text/css" href="styles/navigation3.css">
+		<title>overview</title>
+ 
+		<script>
+		
+		$(function(){
+			$('.navigation').navigation();
+			$('.navigation2').navigation({
+				showOnlySelected : false,
+				animate : false
+			});
+
+			$('.navigation3').navigation({
+				elListItem: ".list-item",
+				elList: ".list",
+			});
+		});
+		</script>
+	</head>
+	<body> 	<div id="headbanner" style="background-color: grey; text-align: center;">
+		     <label>MainTopic</label>
+            <select onchange="mainTopicfunction()" id="MainTopicid" text="MainTopic" value="MainTopic">
+                <option value="cloud">cloud</option>
+                <option value="devops">devops</option>
+                <option value="programming">programming</option>
+                <option value="Security">Security</option>
+                <option value="Softwaretesting">Softwaretesting</option>
+                <option value="faq">faq</option>
+            </select>
+            <label>SubTopic</label>
+            <select onchange="subTopicfunction()" id="SubTopic">
+                <option value="Az900_3hrs_transcipt">Az900_3hrs_transcipt.txt</option>
+                <option value="helm">helm</option>
+                <option value="git">git</option>
+                <option value="github">github</option>
+                <option value="gitlab">gitlab</option>
+                <option value="OS">OS</option>
+                <option value="shellcommands">shellcommands</option>
+                <option value="maven">maven</option>
+                <option value="aws">aws</option>
+                <option value="aws_3hrs_notes">aws_3hrs_notes.txt</option>
+                <option value="Az900_3hrs">Az900_3hrs.txt</option>
+                <option value="AWS_3hrs_Transcript">AWS_3hrs_Transcript.txt</option>
+                <option value="Azure">Azure.txt</option>
+                <option value="GCP">GCP</option>
+                <option value="Openstack">Openstack</option>
+                <option value="java">java</option>
+                <option value="javascript">javascript</option>
+                <option value="groovy">groovy</option>
+                <option value="go">go</option>
+                <option value="python">python</option>
+                <option value="checkmarx">checkmarx</option>
+                <option value="cryptography">cryptography</option>
+                <option value="fortify">fortify</option>
+                <option value="sonar">sonar</option>
+                <option value="whitesource">whitesource</option>
+                <option value="softwaretesting">softwaretesting</option>
+                <option value="Loadrunner">Loadrunner</option>
+                <option value="Jmeter">Jmeter</option>
+            </select>
+        </div>
+        <button onclick="togglediv('Index')" style="background-color: Transparent; border: black;">
+            <h3 id="header">overview</h3>
+        </button>
+        <div style="text-align: center;">
+            <center>
+                <table id="TableSelector" style="border: None;">
+                    <tr>
+                        <td></td>
+                        <td>
+                            <label> Load type</label>
+                            <input type="radio" id="Basic" name="display_type" value="Basic" checked="checked" onclick="displayselected()" />
+                            <label for="Basic">Basic</label>
+                            <input type="radio" id="FAQ" name="display_type" value="FAQ" onclick="displayselected()" />
+                            <label for="FAQ">FAQ</label>
+                            <input type="radio" id="Detailed" name="display_type" value="Detailed" onclick="displayselected()" /> <label for="Detailed">Detailed</label><br />
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><label>Load Url</label></td>
+                        <td colspan="2">
+                            <input type="text" id="url" size="50" value="https://ag143.github.io/Json/" readonly />
+                        </td>
+                        <td><button id="Reload" onclick="successfulreload()">Reload</button></td>
+                    </tr>
+                </table>
+            </center>
+            <br />
+            <br />
+        </div>
+		 <div style="width: 100%;height:100%; "  >
+            <div id="Index" style="float: left; width: 22%; border-right: 1px solid; border-radius: 5px;  overflow-x: scroll; height: 100%;max-height: 100vh;">
+				
+			</div>
+            <div id="Main" style=" padding: 1%;border-left: 1px solid #BEBEBE;float: left; width: 72%; margin-left: 10px; border-radius: 5px;   height: 100%;overflow-x: scroll;height:100%;max-height: 100vh;">
+			
+			</div>
+        </div>
+		<script>
+		var indexContent = "<ul class='navigation'>";
+		var displaytype = "";
+		var mainContent = "";
+		var previousHeader = "";
+		var currentHeader = "";
+		
+		$.ajax({
+            url: "https://ag143.github.io/obselete/topicindex/devops.md",
+            async: false,
+            success: function (data) {
+                var dataobject = data;
+                displaytype = "Basic";
+                //console.log("started---->"+dataobject);
+                lineoutput = dataobject.split("\n");
+				for (var x = 0; x < lineoutput.length; x++)
+				{
+				if (lineoutput[x].startsWith("# ") ||lineoutput[x].startsWith("## ") ||lineoutput[x].startsWith("### ") ||lineoutput[x].startsWith("#### ") ||lineoutput[x].startsWith("##### ") ||lineoutput[x].startsWith("###### ") ) {
+				if (lineoutput[x].startsWith("# ")) {
+				currentHeader = "#";
+				}
+				if (lineoutput[x].startsWith("## ")) {
+				currentHeader = "##";
+				}
+				if (lineoutput[x].startsWith("### ")) {
+				currentHeader = "###";
+				}
+				if (lineoutput[x].startsWith("#### ")) {
+				currentHeader = "####";
+				}
+				//closing  List item and ul item
+				if(currentHeader == "#" && previousHeader == "#")
+				{
+				indexContentfun("</li>");
+				//indexContent = indexContent + "</li>";
+				mainContentfun(lineoutput[x]);
+				
+				}
+				if(currentHeader == "##" && previousHeader == "#")
+				{
+				indexContentfun("<ul>");
+				//indexContent = indexContent + "<ul>";
+				mainContentfun(lineoutput[x]);
+				}
+				if(currentHeader == "##" && previousHeader == "##")
+				{
+				indexContentfun("</li>");
+				//indexContent = indexContent + "</li>";
+				mainContentfun(lineoutput[x]);
+				}
+				if(currentHeader == "###" && previousHeader == "###")
+				{
+				indexContentfun("</li>");
+				//indexContent = indexContent + "</li>";
+				mainContentfun(lineoutput[x]);
+				}
+				if(currentHeader == "#" && previousHeader == "##")
+				{
+				indexContentfun("</li></ul>");
+				//indexContent = indexContent + "</li></ul>";
+				
+				}if(currentHeader == "##" && previousHeader == "###")
+				{
+				indexContentfun("</li></ul>");
+				//indexContent = indexContent + "</li></ul>";
+				mainContentfun(lineoutput[x]);
+				}
+				if(currentHeader == "###" && previousHeader == "##")
+				{
+				indexContent = indexContent + "<ul>";
+				mainContentfun(lineoutput[x]);
+				}
+				if(currentHeader == "####" && previousHeader == "###")
+				{
+				indexContentfun("</ul>");
+				//indexContent = indexContent + "<ul>";
+				mainContentfun(lineoutput[x]);
+				}
+				if(currentHeader == "###" && previousHeader == "####")
+				{
+				indexContentfun("</li></ul>");
+				//indexContent = indexContent + "</li></ul>";
+				mainContentfun(lineoutput[x]);
+				}
+				if(currentHeader == "####" && previousHeader == "####")
+				{
+				indexContentfun("</li>");
+				//indexContent = indexContent + "</li>";
+				mainContentfun(lineoutput[x]);
+				}
+				if(currentHeader == "##" && previousHeader == "####")
+				{
+				indexContentfun("</li></ul></li></ul>");
+				//indexContent = indexContent + "</li></ul></li></ul>";
+				mainContentfun(lineoutput[x]);
+				}
+				if(currentHeader == "#" && previousHeader == "###")
+				{
+				indexContentfun("</li></ul></li></ul>");
+				//indexContent = indexContent + "</li></ul></li></ul>";
+				mainContentfun(lineoutput[x]);
+				}
+				if(currentHeader == "#" && previousHeader == "####")
+				{
+				indexContentfun("</li></ul></li></ul></li></ul>");
+				//indexContent = indexContent + "</li></ul></li></ul></li></ul>";
+				mainContentfun(lineoutput[x]);
+				}
+				
+				console.log(lineoutput[x]);
+				if (lineoutput[x].startsWith("# ")) {
+				indexContentfun("<li><li><a href=#"+lineoutput[x].replace(/# /g, "")+">"+lineoutput[x].replace(/# /g, "")+"</a>");
+				//indexContent = indexContent +"<li><li><a href=#"+lineoutput[x].replace(/# /g, "")+">"+lineoutput[x].replace(/# /g, "")+"</a>";
+				//mainContentfun(lineoutput[x]);
+				}
+				if (lineoutput[x].startsWith("## ")) {
+				indexContentfun(" <li><a href=#"+lineoutput[x].replace(/## /g, "")+">"+lineoutput[x].replace(/## /g, "")+"</a>");
+				//indexContent = indexContent +" <li><a href=#"+lineoutput[x].replace(/## /g, "")+">"+lineoutput[x].replace(/## /g, "")+"</a>";
+				//mainContentfun(lineoutput[x]);
+				}
+				if (lineoutput[x].startsWith("### ")) {
+				indexContentfun(" <li><a href=#"+lineoutput[x].replace(/### /g, "")+">"+lineoutput[x].replace(/### /g, "")+"</a>");
+				//indexContent = indexContent +" <li><a href=#"+lineoutput[x].replace(/### /g, "")+">"+lineoutput[x].replace(/### /g, "")+"</a>";
+				//mainContentfun(lineoutput[x]);
+				}
+				if (lineoutput[x].startsWith("#### ")) {
+				indexContentfun(" <li><a href=#"+lineoutput[x].replace(/#### /g, "")+">"+lineoutput[x].replace(/#### /g, "")+"</a>");
+				//indexContent = indexContent +" <li><a href=#"+lineoutput[x].replace(/#### /g, "")+">"+lineoutput[x].replace(/#### /g, "")+"</a>";
+				//mainContentfun(lineoutput[x]);
+				}
+				
+				
+				
+				previousHeader=currentHeader;
+				}
+				else
+				{
+				//else case
+				mainContentfun(lineoutput[x]);
+				}
+				}
+              
+               indexContent = indexContent + "</ul>";
+			   console.log(indexContent);
+			   document.getElementById("Index").innerHTML = indexContent;
+			   document.getElementById("Main").innerHTML = mainContent;
+            },
+        });
+		function togglediv(id) {
+            var div = document.getElementById(id);
+            //div.style.display = div.style.display == "none" ? "block" : "none";
+            if (div.style.display !== "none") {
+                div.style.display = "none";
+                document.getElementById("Main").style.width = "90%";
+                document.getElementById("TableSelector").style.display = "none";
+                document.getElementById("headbanner").style.display = "none";
+            } else {
+                div.style.display = "block";
+                document.getElementById("Main").style.width = "70%";
+                document.getElementById("TableSelector").style.display = "block";
+                document.getElementById("headbanner").style.display = "block";
+                //document.getElementById("headbanner").style.text-align='center';
+            }
+        }
+		function mainContentfun(linedata)
+		{
+		if(linedata.startsWith("# ")){
+		mainContent = mainContent +"<hr>&nbsp&nbsp&nbsp<h1>"+linedata.replace(/# /g, "")+"</h1><br>";
+		} else
+		if(linedata.startsWith("## ")){
+		mainContent = mainContent +"&nbsp&nbsp&nbsp<i><h2 id="+linedata.replace(/## /g, "")+">"+linedata.replace(/## /g, "")+"</h2></i><br>";
+		} else
+		if(linedata.startsWith("### ")){
+		mainContent = mainContent +"&nbsp&nbsp&nbsp<h3 id="+linedata.replace(/### /g, "")+">"+linedata.replace(/### /g, "")+"</h3><br>";
+		}else
+		if(linedata.startsWith("#### ")){
+		mainContent = mainContent +"&nbsp&nbsp&nbsp<h4 id="+linedata.replace(/#### /g, "")+">"+linedata.replace(/#### /g, "")+"</h4><br>";
+		}else
+		if(linedata.startsWith("> ")){
+		mainContent = mainContent +"&nbsp&nbsp&nbsp&nbsp&nbsp<label style=\"background-color: #D3D3D3;\">"+linedata.replace(/> /g, "") +"</label><br>";
+		}else
+		if(linedata.startsWith("* http") && displaytype == "FAQ"){
+		mainContent = mainContent +"&nbsp&nbsp&nbsp<li><a href="+linedata.replace(/\* /g, "")+">"+linedata.replace(/\* /g, "") +"</a></li>";
+		}else
+		if(linedata.startsWith("- http") && displaytype == "Basic"){
+		mainContent = mainContent +"&nbsp&nbsp&nbsp<li><a href="+linedata.replace(/\- /g, "")+">"+linedata.replace(/\- /g, "") +"</a></li>";
+		}else
+		if(linedata.startsWith("//")){
+		//
+		}else
+		{
+		mainContent = mainContent +"&nbsp&nbsp&nbsp"+linedata +"<br>";
+		}
+		}
+		function indexContentfun(indexvalue)
+		{
+		indexContent = indexContent+ indexvalue;
+		}
+		
+		
+		//aes ecnryption and decryption
+		var encrypted = CryptoJS.AES.encrypt(indexContent, "hello");  
+		console.log("encrypted message:hello world: key:hello::result-->"+encrypted.toString());
+		var decrypted = CryptoJS.AES.decrypt(encrypted.toString(), "hello"); 
+		console.log("decrypted message: U2FsdGVkX1/kF0WVnfJHFdx1xmVyFEENkKYVfPaCepo= , key:hello::result-->"+decrypted.toString(CryptoJS.enc.Utf8)); 
+		</script>
+			 
+		
+		</body>
+	 
+</html>
